@@ -5,7 +5,7 @@
 .env.test
 .env.production
 .env.staging
-*/,env
+*/.env
 */.env.local
 */.env.development
 */.env.test
@@ -14,14 +14,10 @@
 # Node modules (all locations)
 node_modules/
 */node_modules/
-DMS server/node_modules/
-ML integration server/node_modules/
 
 # Package lock files (optional - some prefer to exclude these)
 package-lock.json
 */package-lock.json
-yarn.lock
-*/yarn.lock
 
 # Logs
 logs
