@@ -18,5 +18,8 @@
     "mongoose": "^8.15.0",
     "mongoose-paginate-v2": "^1.9.0",
     "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }

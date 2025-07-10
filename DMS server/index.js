@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const userRoutes = require('./app/routes/userRoute');
+const brandRoutes = require('./app/routes/brandRoute');
 const cors = require('cors');
 const morgan = require('morgan');
 
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api/brands', brandRoutes);
 
 // MongoDB Connection
 mongoose
