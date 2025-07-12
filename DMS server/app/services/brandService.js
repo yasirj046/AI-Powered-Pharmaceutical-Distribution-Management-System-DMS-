@@ -18,14 +18,14 @@ const generateBrandId = async (province, city) => {
       throw new Error("Invalid city for the selected province");
     }
 
-    // Get next sequence number for this province-city combination
+    // Get next sequence number for this province
     const counter = await BrandCounter.findOneAndUpdate(
-      { province, city },
+      { province },
       { $inc: { sequence: 1 } },
       { new: true, upsert: true }
     );
 
-    // Format: provinceCode + cityCode + sequence (padded to 2 digits)
+    // Format: provinceCode + cityCode + provinceSequence (padded to 2 digits)
     const brandId = `${provinceEntry.code}${cityEntry.code}${counter.sequence.toString().padStart(2, '0')}`;
     
     return brandId;

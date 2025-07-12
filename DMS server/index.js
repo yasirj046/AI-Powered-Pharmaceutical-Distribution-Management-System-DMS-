@@ -3,6 +3,13 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const userRoutes = require('./app/routes/userRoute');
 const brandRoutes = require('./app/routes/brandRoute');
+const employeeRoutes = require('./app/routes/employeeRoute');
+const groupRoutes = require('./app/routes/groupRoute');
+const subgroupRoutes = require('./app/routes/subgroupRoute');
+const productRoutes = require('./app/routes/productRoute');
+const areaRoutes = require('./app/routes/areaRoute');
+const subAreaRoutes = require('./app/routes/subAreaRoute');
+const customerRoutes = require('./app/routes/customerRoute');
 const cors = require('cors');
 const morgan = require('morgan');
 
@@ -19,6 +26,13 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/brands', brandRoutes);
+app.use('/api/employees', employeeRoutes);
+app.use('/api/groups', groupRoutes);
+app.use('/api/subgroups', subgroupRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/areas', areaRoutes);
+app.use('/api/subareas', subAreaRoutes);
+app.use('/api/customers', customerRoutes);
 
 // MongoDB Connection
 mongoose

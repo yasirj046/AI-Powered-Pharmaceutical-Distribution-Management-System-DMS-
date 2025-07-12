@@ -2,7 +2,6 @@ const CITIES = {
   // Punjab Cities
   'Punjab': {
     'Lahore': { code: '11', name: 'Lahore' },
-    'Karachi': { code: '12', name: 'Karachi' },
     'Faisalabad': { code: '13', name: 'Faisalabad' },
     'Rawalpindi': { code: '14', name: 'Rawalpindi' },
     'Gujranwala': { code: '15', name: 'Gujranwala' },
