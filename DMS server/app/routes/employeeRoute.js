@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const employeeController = require('../controllers/employeeController');
-const authMiddleware = require('../middleware/authMiddleware');
+const { authenticate } = require('../middleware/authMiddleware');
 
 // Apply authentication middleware to all routes
-router.use(authMiddleware);
+router.use(authenticate);
 
 // Employee CRUD operations
 router.post('/', employeeController.createEmployee);

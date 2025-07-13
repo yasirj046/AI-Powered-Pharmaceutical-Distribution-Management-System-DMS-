@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const customerController = require('../controllers/customerController');
-const authMiddleware = require('../middleware/authMiddleware');
+const { authenticate } = require('../middleware/authMiddleware');
 
 // Apply authentication middleware to all routes
-router.use(authMiddleware);
+router.use(authenticate);
 
 // Customer CRUD operations
 router.post('/', customerController.createCustomer);

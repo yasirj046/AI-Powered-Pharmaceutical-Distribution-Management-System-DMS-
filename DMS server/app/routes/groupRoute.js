@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const groupController = require('../controllers/groupController');
-const authMiddleware = require('../middleware/authMiddleware');
+const { authenticate } = require('../middleware/authMiddleware');
 
 // Apply authentication middleware to all routes
-router.use(authMiddleware);
+router.use(authenticate);
 
 // Group CRUD operations
 router.post('/', groupController.createGroup);

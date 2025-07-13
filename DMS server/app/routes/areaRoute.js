@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const areaController = require('../controllers/areaController');
-const authMiddleware = require('../middleware/authMiddleware');
+const { authenticate } = require('../middleware/authMiddleware');
 
 // Apply authentication middleware to all routes
-router.use(authMiddleware);
+router.use(authenticate);
 
 // Area CRUD operations
 router.post('/', areaController.createArea);

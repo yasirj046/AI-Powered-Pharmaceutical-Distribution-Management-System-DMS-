@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const productController = require('../controllers/productController');
-const authMiddleware = require('../middleware/authMiddleware');
+const { authenticate } = require('../middleware/authMiddleware');
 
 // Apply authentication middleware to all routes
-router.use(authMiddleware);
+router.use(authenticate);
 
 // Product CRUD operations
 router.post('/', productController.createProduct);
