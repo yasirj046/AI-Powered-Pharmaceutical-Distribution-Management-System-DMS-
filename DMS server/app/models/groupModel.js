@@ -29,8 +29,7 @@ groupSchema.plugin(mongoosePaginate);
 // Text search index for name
 groupSchema.index({ name: "text" });
 
-// Unique index for name
-groupSchema.index({ name: 1 }, { unique: true });
+// Note: name already has unique index from unique: true field definition
 
 // Compound indexes for common query patterns
 groupSchema.index({ isActive: 1, createdAt: -1 });

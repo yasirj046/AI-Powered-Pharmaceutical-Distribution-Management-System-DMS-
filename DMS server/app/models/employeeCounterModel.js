@@ -4,7 +4,6 @@ const employeeCounterSchema = new mongoose.Schema({
   sequence: { type: Number, default: 0 }
 });
 
-// Single document for global counter
-employeeCounterSchema.index({ _id: 1 }, { unique: true });
+// MongoDB automatically creates _id index, no need to specify it manually
 
 module.exports = mongoose.model("EmployeeCounter", employeeCounterSchema);

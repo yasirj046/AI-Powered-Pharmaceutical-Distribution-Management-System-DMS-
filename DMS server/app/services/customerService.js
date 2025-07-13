@@ -18,14 +18,14 @@ const generateCustomerId = async (city) => {
       throw new Error("Invalid city");
     }
 
-    // Get next global sequence number
+    // Get next sequence number for this specific city
     const counter = await CustomerCounter.findOneAndUpdate(
-      {},
+      { city },
       { $inc: { sequence: 1 } },
       { new: true, upsert: true }
     );
 
-    // Format: cityCode + globalSequence (padded to 2 digits)
+    // Format: cityCode + citySequence (padded to 2 digits)
     const customerId = `${cityCode}${counter.sequence.toString().padStart(2, '0')}`;
     
     return customerId;

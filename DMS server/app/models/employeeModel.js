@@ -9,8 +9,7 @@ const employeeSchema = new mongoose.Schema(
     employeeId: {
       type: String,
       required: true,
-      unique: true,
-      index: true
+      unique: true
     },
     name: {
       type: String,
@@ -104,23 +103,12 @@ employeeSchema.index({
   address: 'text' 
 });
 
-// Unique indexes
-employeeSchema.index({ employeeId: 1 }, { unique: true });
-employeeSchema.index({ cnic: 1 }, { unique: true });
+// Note: employeeId and cnic already have unique indexes from unique: true field definitions
 
 // Compound indexes for common query patterns
-employeeSchema.index({ province: 1, isActive: 1 });
-employeeSchema.index({ city: 1, isActive: 1 });
+employeeSchema.index({ province: 1, city: 1, isActive: 1 });
 employeeSchema.index({ designation: 1, isActive: 1 });
 employeeSchema.index({ isActive: 1, createdAt: -1 });
-employeeSchema.index({ province: 1, city: 1, isActive: 1 });
-
-// Single field indexes for filtering
-employeeSchema.index({ province: 1 });
-employeeSchema.index({ city: 1 });
-employeeSchema.index({ designation: 1 });
-employeeSchema.index({ isActive: 1 });
-employeeSchema.index({ salary: 1 });
 
 // Custom validation for city-province relationship
 employeeSchema.pre('save', function(next) {

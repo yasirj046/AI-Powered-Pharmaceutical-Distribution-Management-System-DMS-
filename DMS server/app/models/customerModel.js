@@ -9,8 +9,7 @@ const customerSchema = new mongoose.Schema(
     customerId: {
       type: String,
       required: true,
-      unique: true,
-      index: true
+      unique: true
     },
     province: {
       type: String,
@@ -130,10 +129,7 @@ customerSchema.index({
   address: "text" 
 });
 
-// Unique indexes
-customerSchema.index({ customerId: 1 }, { unique: true });
-customerSchema.index({ "contact.cnic": 1 }, { unique: true });
-customerSchema.index({ licenseNumber: 1 }, { unique: true });
+// Note: customerId, contact.cnic, and licenseNumber already have unique indexes from unique: true field definitions
 
 // Compound indexes for common query patterns
 customerSchema.index({ province: 1, isActive: 1 });

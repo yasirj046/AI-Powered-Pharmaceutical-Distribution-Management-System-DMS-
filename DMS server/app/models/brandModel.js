@@ -8,8 +8,7 @@ const brandSchema = new mongoose.Schema(
     brandId: { 
       type: String, 
       required: [true, 'Brand ID is required'], 
-      unique: true,
-      index: true
+      unique: true
     },
     name: { 
       type: String, 
@@ -80,19 +79,10 @@ brandSchema.plugin(mongoosePaginate);
 // Text search index for name, city, and province
 brandSchema.index({ name: "text", city: "text", province: "text", address: "text" });
 
-// Unique index for brandId
-brandSchema.index({ brandId: 1 }, { unique: true });
+// Note: brandId already has unique index from unique: true field definition
 
 // Compound indexes for common query patterns
-brandSchema.index({ province: 1, isActive: 1 });
-brandSchema.index({ city: 1, isActive: 1 });
 brandSchema.index({ province: 1, city: 1, isActive: 1 });
 brandSchema.index({ isActive: 1, createdAt: -1 });
-
-// Single field indexes
-brandSchema.index({ province: 1 });
-brandSchema.index({ city: 1 });
-brandSchema.index({ isActive: 1 });
-brandSchema.index({ createdAt: -1 });
 
 module.exports = mongoose.model("Brand", brandSchema);

@@ -6,8 +6,7 @@ const productSchema = new mongoose.Schema(
     productId: {
       type: String,
       required: true,
-      unique: true,
-      index: true
+      unique: true
     },
     brand: {
       type: mongoose.Schema.Types.ObjectId,
@@ -58,8 +57,7 @@ const productSchema = new mongoose.Schema(
 productSchema.plugin(mongoosePaginate);
 
 // Comprehensive indexing for performance
-// Unique index for productId
-productSchema.index({ productId: 1 }, { unique: true });
+// Note: productId already has unique index from unique: true field definition
 
 // Text search index for product name
 productSchema.index({ name: "text" });
