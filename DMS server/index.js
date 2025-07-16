@@ -23,6 +23,24 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
 
+// Disable ETag generation to prevent 304 responses
+app.set('etag', false);
+
+// Add global no-cache headers
+app.use((req, res, next) => {
+  res.set({
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0'
+  });
+  next();
+});
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'OK', message: 'Server is running' });
+});
+
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/brands', brandRoutes);

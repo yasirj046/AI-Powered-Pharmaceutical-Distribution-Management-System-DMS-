@@ -47,11 +47,21 @@ exports.createBrand = async (brandData) => {
   }
 };
 
-exports.getAllBrands = async (page, limit, keyword) => {
-  let query = { isActive: true };
+exports.getAllBrands = async (page, limit, keyword, status = "active") => {
+  let query = {};
+  
+  // Handle status filter
+  if (status === "active") {
+    query.isActive = true;
+  } else if (status === "inactive") {
+    query.isActive = false;
+  }
+  // If status === "all", no filter applied
+  
   if (keyword !== "") {
     query.$text = { $search: keyword };
   }
+  
   return await Brand.paginate(query, { 
     page, 
     limit, 
@@ -60,7 +70,7 @@ exports.getAllBrands = async (page, limit, keyword) => {
 };
 
 exports.getBrandById = async (id) => {
-  return await Brand.findOne({ _id: id, isActive: true });
+  return await Brand.findOne({ _id: id });
 };
 
 exports.getBrandByBrandId = async (brandId) => {
@@ -71,7 +81,7 @@ exports.updateBrand = async (id, brandData) => {
   // Remove brandId from update data to prevent modification
   const { brandId, ...updateData } = brandData;
   return await Brand.findOneAndUpdate(
-    { _id: id, isActive: true }, 
+    { _id: id }, 
     updateData, 
     { new: true }
   );

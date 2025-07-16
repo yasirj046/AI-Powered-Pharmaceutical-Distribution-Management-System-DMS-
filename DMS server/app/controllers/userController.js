@@ -4,30 +4,140 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 exports.login = async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ message: "Email and password are required" });
-  }
-
   try {
-    const user = await userService.findByEmail(email);
+    const { email, password } = req.body;
+    
+    // Validation
+    if (!email || !password) {
+      return res.status(400).json(
+        util.createResponse(null, { message: "Email and password are required" })
+      );
+    }
 
+    // Find user by email (case-insensitive)
+    const user = await userService.findByEmail(email.trim().toLowerCase());
+    
     if (!user) {
-      return res.status(200).json(util.createResponse(null, { message: "User not found" }));
+      return res.status(200).json(
+        util.createResponse(null, { message: "Invalid email or password" })
+      );
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(200).json(util.createResponse(null, { message: "Invalid credentials" }));
+    // Check password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    
+    if (!isPasswordValid) {
+      return res.status(200).json(
+        util.createResponse(null, { message: "Invalid email or password" })
+      );
     }
 
-    const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    // Generate JWT token
+    const token = jwt.sign(
+      { 
+        id: user._id, 
+        email: user.email,
+        name: user.name
+      }, 
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
 
-    res.status(200).json(util.createResponse({ token, user }, null, "Login successful"));
+    // Return user data without password
+    const userData = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
+    };
+
+    return res.status(200).json(
+      util.createResponse(
+        { token, user: userData }, 
+        null, 
+        "Login successful"
+      )
+    );
+
   } catch (error) {
-    res.status(200).json(util.createResponse(null, error));
+    console.error('Login error:', error);
+    return res.status(500).json(
+      util.createResponse(null, { message: "Internal server error" })
+    );
+  }
+};
+
+exports.register = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    
+    // Validation
+    if (!name || !email || !password) {
+      return res.status(400).json(
+        util.createResponse(null, { message: "Name, email and password are required" })
+      );
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json(
+        util.createResponse(null, { message: "Password must be at least 6 characters long" })
+      );
+    }
+
+    // Check if user already exists
+    const existingUser = await userService.findByEmail(email.trim().toLowerCase());
+    if (existingUser) {
+      return res.status(400).json(
+        util.createResponse(null, { message: "User with this email already exists" })
+      );
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    // Create user
+    const userData = {
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      password: hashedPassword
+    };
+
+    const user = await userService.createUser(userData);
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { 
+        id: user._id, 
+        email: user.email,
+        name: user.name
+      }, 
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    // Return user data without password
+    const responseUser = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
+    };
+
+    return res.status(201).json(
+      util.createResponse(
+        { token, user: responseUser }, 
+        null, 
+        "User registered successfully"
+      )
+    );
+
+  } catch (error) {
+    console.error('Registration error:', error);
+    return res.status(500).json(
+      util.createResponse(null, { message: "Internal server error" })
+    );
   }
 };
 

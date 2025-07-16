@@ -32,9 +32,18 @@ exports.getAllBrands = async (req, res) => {
   const page = parseInt(req.query.pageNumber) || 1;
   const limit = parseInt(req.query.pageSize) || 10;
   const keyword = req.query.keyword || "";
+  const status = req.query.status || "active"; // "active", "inactive", "all"
 
   try {
-    const brands = await brandService.getAllBrands(page, limit, keyword);
+    // Add no-cache headers to prevent 304 responses
+    res.set({
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+      'ETag': false
+    });
+
+    const brands = await brandService.getAllBrands(page, limit, keyword, status);
     res.status(200).json(util.createResponse(brands, null, "All Brands"));
   } catch (error) {
     res.status(200).json(util.createResponse([], error));

@@ -1,18 +1,12 @@
 const productService = require("../services/productService");
+const util = require("../util/util");
 
 exports.createProduct = async (req, res) => {
   try {
     const product = await productService.createProduct(req.body);
-    res.status(201).json({
-      success: true,
-      message: "Product created successfully",
-      data: product
-    });
+    res.status(201).json(util.createResponse(product, null, "Product created successfully"));
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message
-    });
+    res.status(200).json(util.createResponse(null, error));
   }
 };
 
@@ -23,16 +17,9 @@ exports.getAllProducts = async (req, res) => {
     const keyword = req.query.keyword || "";
     
     const products = await productService.getAllProducts(page, limit, keyword);
-    res.status(200).json({
-      success: true,
-      message: "Products retrieved successfully",
-      data: products
-    });
+    res.status(200).json(util.createResponse(products, null, "Products retrieved successfully"));
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    res.status(200).json(util.createResponse(null, error));
   }
 };
 

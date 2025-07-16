@@ -1,0 +1,64 @@
+{
+  "name": "pharmaceutical-dms",
+  "version": "1.0.0",
+  "description": "AI-Powered Pharmaceutical Distribution Management System",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "frontend"
+    ]
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "scripts": {
+    "dev": "concurrently -n \"backend,frontend\" -c \"blue,green\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "npm run dev --prefix \"DMS server\"",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "start": "npm run start:backend",
+    "start:backend": "npm run start --prefix \"DMS server\"",
+    "start:frontend": "npm run start --prefix frontend",
+    "build": "npm run build:frontend",
+    "build:frontend": "npm run build --prefix frontend",
+    "lint": "npm run lint --prefix frontend",
+    "lint:fix": "npm run lint:fix --prefix frontend",
+    "test": "npm run test --prefix frontend && npm run test --prefix \"DMS server\"",
+    "clean": "rimraf node_modules frontend/node_modules \"DMS server/node_modules\" frontend/.next frontend/out",
+    "reset": "npm run clean && npm install"
+  },
+  "devDependencies": {
+    "check-node-version": "^4.2.1",
+    "concurrently": "^8.2.2",
+    "rimraf": "^5.0.10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/pharmaceutical-dms.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/pharmaceutical-dms/issues"
+  },
+  "homepage": "https://github.com/yourusername/pharmaceutical-dms#readme",
+  "keywords": [
+    "pharmaceutical",
+    "distribution",
+    "management",
+    "nextjs",
+    "nodejs",
+    "mongodb",
+    "express",
+    "typescript",
+    "tailwindcss",
+    "monorepo"
+  ],
+  "author": {
+    "name": "Your Name",
+    "email": "your.email@example.com"
+  },
+  "license": "MIT",
+  "volta": {
+    "node": "18.19.0",
+    "npm": "10.2.3"
+  }
+}
