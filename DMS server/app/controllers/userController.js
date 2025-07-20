@@ -178,6 +178,137 @@ exports.updateUser = async (req, res) => {
   }
 };
 
+// Get current user profile
+exports.getProfile = async (req, res) => {
+  try {
+    const user = await userService.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json(
+        util.createResponse(null, { message: "User not found" })
+      );
+    }
+
+    // Return user data without sensitive information
+    const userProfile = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      role: user.role,
+      isActive: user.isActive,
+      licenseInfo: user.licenseInfo,
+      notificationPreferences: user.notificationPreferences,
+      profile: user.profile,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
+    };
+
+    res.status(200).json(util.createResponse(userProfile, null, "Profile retrieved successfully"));
+  } catch (error) {
+    res.status(500).json(util.createResponse(null, error));
+  }
+};
+
+// Update current user profile
+exports.updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const updateData = req.body;
+
+    // Remove sensitive fields that shouldn't be updated via this endpoint
+    delete updateData.password;
+    delete updateData.role;
+    delete updateData._id;
+    delete updateData.__v;
+
+    // Validate email if being updated
+    if (updateData.email) {
+      updateData.email = updateData.email.trim().toLowerCase();
+      // Check if email is already taken by another user
+      const existingUser = await userService.findByEmail(updateData.email);
+      if (existingUser && existingUser._id.toString() !== userId) {
+        return res.status(400).json(
+          util.createResponse(null, { message: "Email is already in use by another account" })
+        );
+      }
+    }
+
+    const updatedUser = await userService.updateUser(userId, updateData);
+    if (!updatedUser) {
+      return res.status(404).json(
+        util.createResponse(null, { message: "User not found" })
+      );
+    }
+
+    // Return updated user data without sensitive information
+    const userProfile = {
+      id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      phone: updatedUser.phone,
+      role: updatedUser.role,
+      isActive: updatedUser.isActive,
+      licenseInfo: updatedUser.licenseInfo,
+      notificationPreferences: updatedUser.notificationPreferences,
+      profile: updatedUser.profile,
+      createdAt: updatedUser.createdAt,
+      updatedAt: updatedUser.updatedAt
+    };
+
+    res.status(200).json(util.createResponse(userProfile, null, "Profile updated successfully"));
+  } catch (error) {
+    res.status(500).json(util.createResponse(null, error));
+  }
+};
+
+// Change password
+exports.changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.user.id;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json(
+        util.createResponse(null, { message: "Current password and new password are required" })
+      );
+    }
+
+    // Find user with password field
+    const user = await userService.findById(userId);
+    if (!user) {
+      return res.status(404).json(
+        util.createResponse(null, { message: "User not found" })
+      );
+    }
+
+    // Verify current password
+    const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
+    if (!isCurrentPasswordValid) {
+      return res.status(400).json(
+        util.createResponse(null, { message: "Current password is incorrect" })
+      );
+    }
+
+    // Validate new password strength
+    if (newPassword.length < 6) {
+      return res.status(400).json(
+        util.createResponse(null, { message: "New password must be at least 6 characters long" })
+      );
+    }
+
+    // Hash new password
+    const saltRounds = 10;
+    const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+
+    // Update password
+    await userService.updateUser(userId, { password: hashedNewPassword });
+
+    res.status(200).json(util.createResponse(null, null, "Password changed successfully"));
+  } catch (error) {
+    res.status(500).json(util.createResponse(null, error));
+  }
+};
+
 exports.deleteUser = async (req, res) => {
   try {
     const deletedUser = await userService.deleteUser(req.params.id);
