@@ -6,6 +6,13 @@ const { DESIGNATION_ENUM } = require("../constants/designations");
 
 const employeeSchema = new mongoose.Schema(
   {
+    // Multi-tenant support
+    companyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Company',
+      required: [true, 'Company ID is required'],
+      index: true
+    },
     employeeId: {
       type: String,
       required: true,

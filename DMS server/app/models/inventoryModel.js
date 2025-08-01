@@ -17,37 +17,40 @@ const inventoryProductSchema = new mongoose.Schema({
     required: [true, 'Carton size is required'],
     min: [1, 'Carton size must be at least 1']
   },
-  batchNumber: {
-    type: String,
-    required: [true, 'Batch number is required'],
-    trim: true
-  },
-  expiry: {
-    type: Date,
-    required: [true, 'Expiry date is required'],
-    validate: {
-      validator: function(value) {
-        return value > new Date();
+  batches: [
+    {
+      batchNumber: {
+        type: String,
+        required: [true, 'Batch number is required'],
+        trim: true
       },
-      message: 'Expiry date must be in the future'
+      expiry: {
+        type: Date,
+        required: [true, 'Expiry date is required'],
+        validate: {
+          validator: function(value) {
+            return value > new Date();
+          },
+          message: 'Expiry date must be in the future'
+        }
+      },
+      cartons: {
+        type: Number,
+        required: [true, 'Number of cartons is required'],
+        min: [0, 'Cartons cannot be negative']
+      },
+      pieces: {
+        type: Number,
+        required: [true, 'Number of pieces is required'],
+        min: [0, 'Pieces cannot be negative']
+      },
+      bonus: {
+        type: Number,
+        default: 0,
+        min: [0, 'Bonus pieces cannot be negative'],
+      }
     }
-  },
-  cartons: {
-    type: Number,
-    required: [true, 'Number of cartons is required'],
-    min: [0, 'Cartons cannot be negative']
-  },
-  pieces: {
-    type: Number,
-    required: [true, 'Number of pieces is required'],
-    min: [0, 'Pieces cannot be negative']
-  },
-  bonus: {
-    type: Number,
-    default: 0,
-    min: [0, 'Bonus pieces cannot be negative'],
-    // Note: Bonus is now in pieces, not cartons
-  },
+  ],
   orderedQuantity: {
     type: Number,
     required: true,
@@ -145,6 +148,13 @@ inventoryProductSchema.pre('save', function(next) {
 
 const inventorySchema = new mongoose.Schema(
   {
+    // Multi-tenant support
+    companyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Company',
+      required: [true, 'Company ID is required'],
+      index: true
+    },
     inventoryId: {
       type: String,
       required: true,
@@ -307,6 +317,7 @@ inventorySchema.pre('save', function(next) {
   next();
 });
 
+
 // Enhanced indexing for better performance
 // Text search index for inventory ID, brand name, and invoice
 inventorySchema.index({ 
@@ -324,7 +335,9 @@ inventorySchema.index({ isActive: 1, createdAt: -1 });
 inventorySchema.index({ date: -1, isActive: 1 });
 inventorySchema.index({ brandInvoice: 1, isActive: 1 });
 inventorySchema.index({ 'products.productId': 1, isActive: 1 });
-inventorySchema.index({ 'products.batchNumber': 1, isActive: 1 });
+// New: Index for batchNumber and expiry inside batches array
+inventorySchema.index({ 'products.batches.batchNumber': 1, isActive: 1 });
+inventorySchema.index({ 'products.batches.expiry': 1, isActive: 1 });
 inventorySchema.index({ paymentStatus: 1, isActive: 1 });
 inventorySchema.index({ ledgerEntryId: 1 });
 inventorySchema.index({ paymentDate: -1, isActive: 1 });

@@ -8,6 +8,13 @@ const notificationSchema = new mongoose.Schema(
       required: true,
       unique: true
     },
+    // Multi-tenant support
+    companyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Company',
+      required: [true, 'Company ID is required'],
+      index: true
+    },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',

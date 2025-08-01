@@ -347,63 +347,6 @@ class NotificationService {
     }
   }
 
-  // Password reset OTP notification
-  async sendPasswordResetOTP(email, otp, userName = '') {
-    try {
-      const title = `🔐 Password Reset OTP`;
-      const subject = `DMS - Password Reset OTP`;
-      
-      const htmlContent = `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Password Reset</title>
-          </head>
-          <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-              <h1 style="margin: 0; font-size: 28px;">DMS System</h1>
-              <p style="margin: 10px 0 0; font-size: 16px; opacity: 0.9;">Password Reset Request</p>
-            </div>
-            
-            <div style="background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #e9ecef;">
-              <h2 style="color: #495057; margin-top: 0;">Hello ${userName || 'User'}!</h2>
-              
-              <p style="font-size: 16px; margin: 20px 0;">You have requested to reset your password. Please use the following OTP code:</p>
-              
-              <div style="background: white; padding: 30px; border-radius: 8px; text-align: center; margin: 30px 0; border: 2px dashed #007bff;">
-                <h1 style="color: #007bff; font-size: 36px; margin: 0; letter-spacing: 5px; font-family: 'Courier New', monospace;">${otp}</h1>
-                <p style="color: #6c757d; margin: 10px 0 0; font-size: 14px;">This OTP will expire in 15 minutes</p>
-              </div>
-              
-              <div style="background: #fff3cd; padding: 15px; border-radius: 5px; border-left: 4px solid #ffc107; margin: 20px 0;">
-                <p style="margin: 0; color: #856404; font-size: 14px;">
-                  <strong>Security Notice:</strong> If you did not request this password reset, please ignore this email. 
-                  Never share this OTP with anyone.
-                </p>
-              </div>
-              
-              <p style="color: #6c757d; font-size: 14px; margin: 30px 0 0;">
-                This OTP is valid for 15 minutes and can only be used once.<br>
-                For security reasons, please do not share this code with anyone.
-              </p>
-            </div>
-            
-            <div style="text-align: center; margin-top: 20px; color: #6c757d; font-size: 12px;">
-              <p>&copy; ${new Date().getFullYear()} DMS System. All rights reserved.</p>
-            </div>
-          </body>
-        </html>
-      `;
-
-      return await this.sendEmail(email, subject, htmlContent);
-    } catch (error) {
-      console.error('Error sending password reset OTP:', error.message);
-      throw error;
-    }
-  }
-
   // Get user notifications with pagination
   async getUserNotifications(userId, page = 1, limit = 20, unreadOnly = false) {
     try {

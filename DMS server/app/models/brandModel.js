@@ -5,6 +5,13 @@ const { ALL_CITIES } = require("../constants/cities");
 
 const brandSchema = new mongoose.Schema(
   {
+    // Multi-tenant support
+    companyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Company',
+      required: [true, 'Company ID is required'],
+      index: true
+    },
     brandId: { 
       type: String, 
       required: [true, 'Brand ID is required'], 

@@ -6,6 +6,13 @@ const { CUSTOMER_CATEGORY_ENUM } = require("../constants/customerCategories");
 
 const customerSchema = new mongoose.Schema(
   {
+    // Multi-tenant support
+    companyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Company',
+      required: [true, 'Company ID is required'],
+      index: true
+    },
     customerId: {
       type: String,
       required: true,

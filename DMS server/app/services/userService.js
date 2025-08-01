@@ -72,3 +72,12 @@ exports.deleteUser = async (id) => {
     throw error;
   }
 };
+
+exports.findById = async (id) => {
+  try {
+    return await User.findById(id);
+  } catch (error) {
+    console.error('Error in findById:', error);
+    throw error;
+  }
+};

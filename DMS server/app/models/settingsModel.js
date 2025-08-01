@@ -3,6 +3,14 @@ const mongoose = require("mongoose");
 // Settings schema - Admin-only configuration for technical settings
 const settingsSchema = new mongoose.Schema(
   {
+    // Multi-tenant support
+    companyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Company',
+      required: [true, 'Company ID is required'],
+      unique: true, // Each company has one settings document
+      index: true
+    },
     // Company Information
     company: {
       name: {

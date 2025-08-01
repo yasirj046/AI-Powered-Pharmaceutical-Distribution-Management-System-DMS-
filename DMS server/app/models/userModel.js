@@ -22,6 +22,22 @@ const userSchema = new mongoose.Schema(
       required: [true, 'Password is required'],
       minlength: [6, 'Password must be at least 6 characters']
     },
+    // Multi-tenant support (optional for standalone users)
+    companyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Company',
+      required: false,
+      index: true
+    },
+    role: {
+      type: String,
+      enum: ['admin', 'user', 'manager'],
+      default: 'user'
+    },
+    isActive: {
+      type: Boolean,
+      default: true
+    },
     // User Profile Information
     profile: {
       phone: {
@@ -98,21 +114,6 @@ const userSchema = new mongoose.Schema(
           type: Boolean,
           default: true
         }
-      }
-    },
-    // Password Reset
-    passwordReset: {
-      otp: {
-        type: String,
-        default: null
-      },
-      otpExpires: {
-        type: Date,
-        default: null
-      },
-      attempts: {
-        type: Number,
-        default: 0
       }
     },
     // System fields

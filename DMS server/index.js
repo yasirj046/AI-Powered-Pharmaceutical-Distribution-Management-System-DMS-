@@ -3,6 +3,9 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const userRoutes = require('./app/routes/userRoute');
 const brandRoutes = require('./app/routes/brandRoute');
+const companyRoutes = require('./app/routes/companyRoute');
+const superAdminRoutes = require('./app/routes/superAdminRoute');
+const emailRoutes = require('./app/routes/emailRoute');
 // const employeeRoutes = require('./app/routes/employeeRoute');
 // const groupRoutes = require('./app/routes/groupRoute');
 // const subgroupRoutes = require('./app/routes/subgroupRoute');
@@ -51,6 +54,8 @@ app.get('/api/health', (req, res) => {
 
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api/companies', companyRoutes);
+app.use('/api/super-admin', superAdminRoutes);
 app.use('/api/brands', brandRoutes);
 // app.use('/api/employees', employeeRoutes);
 // app.use('/api/groups', groupRoutes);
@@ -64,6 +69,7 @@ app.use('/api/brands', brandRoutes);
 // app.use('/api/ledger', ledgerRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/email', emailRoutes);
 app.use('/api/scheduler', schedulerRoutes);
 // app.use('/api/delivery-assignments', deliveryAssignmentRoutes);
 

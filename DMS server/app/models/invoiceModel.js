@@ -86,6 +86,13 @@ const invoiceProductSchema = new mongoose.Schema({
 
 const invoiceSchema = new mongoose.Schema(
   {
+    // Multi-tenant support
+    companyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Company',
+      required: [true, 'Company ID is required'],
+      index: true
+    },
     invoiceId: {
       type: String,
       required: true,

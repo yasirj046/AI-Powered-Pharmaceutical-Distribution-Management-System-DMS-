@@ -37,7 +37,8 @@ exports.login = async (req, res) => {
       { 
         id: user._id, 
         email: user.email,
-        name: user.name
+        name: user.name,
+        role: user.role || 'user'
       }, 
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
@@ -48,6 +49,8 @@ exports.login = async (req, res) => {
       id: user._id,
       name: user.name,
       email: user.email,
+      role: user.role || 'user',
+      phone: user.phone,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt
     };
@@ -93,14 +96,11 @@ exports.register = async (req, res) => {
       );
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 12);
-
-    // Create user
+    // Create user - password will be hashed by pre-save middleware
     const userData = {
       name: name.trim(),
       email: email.trim().toLowerCase(),
-      password: hashedPassword
+      password: password // Don't hash here, let the model's pre-save middleware do it
     };
 
     const user = await userService.createUser(userData);

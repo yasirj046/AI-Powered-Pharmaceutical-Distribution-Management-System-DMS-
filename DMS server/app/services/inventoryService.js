@@ -163,10 +163,13 @@ exports.createInventory = async (inventoryData) => {
 };
 
 // Get all inventories with pagination
-exports.getAllInventories = async (page, limit, keyword, status = "active", brandId = "", startDate = "", endDate = "") => {
+exports.getAllInventories = async (page, limit, keyword, status = "active", brandId = "", startDate = "", endDate = "", companyId) => {
   try {
-    // Build query
-    const query = { isActive: status === "active" ? true : status === "inactive" ? false : { $in: [true, false] } };
+    // Build query with multi-tenant filtering
+    const query = { 
+      companyId: companyId, // Multi-tenant filtering
+      isActive: status === "active" ? true : status === "inactive" ? false : { $in: [true, false] } 
+    };
     
     if (keyword) {
       query.$or = [

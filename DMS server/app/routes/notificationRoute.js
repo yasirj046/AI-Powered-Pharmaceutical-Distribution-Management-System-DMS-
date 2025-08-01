@@ -3,11 +3,7 @@ const router = express.Router();
 const notificationController = require("../controllers/notificationController");
 const { authenticate } = require("../middleware/authMiddleware");
 
-// Public routes (no authentication required)
-router.post("/password-reset/send-otp", notificationController.sendPasswordResetOTP);
-router.post("/password-reset/verify-otp", notificationController.verifyOTPAndResetPassword);
-
-// Apply authentication middleware to protected routes
+// Apply authentication middleware to all routes
 router.use(authenticate);
 
 // In-app notification management

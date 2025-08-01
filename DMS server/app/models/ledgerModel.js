@@ -3,6 +3,13 @@ const mongoosePaginate = require("mongoose-paginate-v2");
 
 const ledgerSchema = new mongoose.Schema(
   {
+    // Multi-tenant support
+    companyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Company',
+      required: [true, 'Company ID is required'],
+      index: true
+    },
     ledgerId: {
       type: String,
       required: [true, 'Ledger ID is required'],

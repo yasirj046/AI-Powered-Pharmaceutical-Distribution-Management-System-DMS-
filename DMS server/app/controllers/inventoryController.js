@@ -4,7 +4,13 @@ const util = require("../util/util");
 // Create new inventory entry
 exports.createInventory = async (req, res) => {
   try {
-    const inventory = await inventoryService.createInventory(req.body);
+    // Add companyId from authenticated user
+    const inventoryData = {
+      ...req.body,
+      companyId: req.user.companyId
+    };
+    
+    const inventory = await inventoryService.createInventory(inventoryData);
     res.status(201).json(
       util.createResponse(inventory, null, "Inventory created successfully")
     );
@@ -24,6 +30,7 @@ exports.getAllInventories = async (req, res) => {
   const brandId = req.query.brandId || "";
   const startDate = req.query.startDate || "";
   const endDate = req.query.endDate || "";
+  const companyId = req.user.companyId; // Multi-tenant filtering
 
   try {
     // Add no-cache headers to prevent 304 responses
@@ -34,7 +41,7 @@ exports.getAllInventories = async (req, res) => {
       'ETag': false
     });
 
-    const result = await inventoryService.getAllInventories(page, limit, keyword, status, brandId, startDate, endDate);
+    const result = await inventoryService.getAllInventories(page, limit, keyword, status, brandId, startDate, endDate, companyId);
     res.status(200).json(
       util.createResponse(result, null, "All Inventories")
     );

@@ -3,6 +3,13 @@ const mongoosePaginate = require("mongoose-paginate-v2");
 
 const deliveryAssignmentSchema = new mongoose.Schema(
   {
+    // Multi-tenant support
+    companyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Company',
+      required: [true, 'Company ID is required'],
+      index: true
+    },
     deliveryLogNumber: {
       type: String,
       required: true,

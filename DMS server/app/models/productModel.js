@@ -3,6 +3,13 @@ const mongoosePaginate = require("mongoose-paginate-v2");
 
 const productSchema = new mongoose.Schema(
   {
+    // Multi-tenant support
+    companyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Company',
+      required: [true, 'Company ID is required'],
+      index: true
+    },
     productId: {
       type: String,
       required: true,
